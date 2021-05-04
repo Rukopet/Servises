@@ -1,4 +1,4 @@
-source_folders=("nginx")
+source_folders=("nginx" "mysql" "phpmyadmin" "wordpress")
 # dir with image
 
 #build_name=("nginx_image")
@@ -20,21 +20,31 @@ kubectl_apply()
   kubectl apply -f "${source_folders[$1]}/${source_folders[$1]}.yaml"
 }
 
+re()
+{
+  kubectl delete deployments "${source_folders[$1]}-deploy"
+}
+
 main()
 {
   ((len--))
 
-  if [ "$1" == 1 ]
+  if [ "$1" == re ]
   then
-    i=-1
+    ((i=-1))
     while [ "$i" != "$len" ]
-      do
-       ((i++))
-       kubectl_apply "$i"
-      done
+    do
+      ((i++))
+      re "$i"
+    done
+  fi
+
+  ((i=-1))
+
+  if [ "$2" == ex ]
+  then
     exit
   fi
-  i=-1
 
   while [ "$i" != "$len" ]
   do
@@ -43,6 +53,7 @@ main()
     kubectl_apply "$i"
   done
   kubectl get pods
+  kubectl describe pods
 }
 
-main "$1"
+main "$1" "$2"

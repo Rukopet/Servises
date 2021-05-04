@@ -1,0 +1,26 @@
+# /etc/nginx/nginx.conf
+
+	server {
+		listen 80;
+		listen [::]:80;
+		return 301			https://$host$request_uri;
+	}
+
+	server {
+		listen 443			ssl;
+		listen [::]:443		ssl;
+		ssl_certificate		/etc/ssl/certs/servic.crt;
+		ssl_certificate_key	/etc/ssl/private/servic.key;
+
+		root				/var/www/localhost;
+		index				index.html index.php index.htm;
+
+
+		    location ~ \/index.php {
+        return 301   http://$host/phpmyadmin/;
+    	}
+
+		location /wordpress {
+		return 307 http://192.168.99.104:5050/;
+		}
+	}
