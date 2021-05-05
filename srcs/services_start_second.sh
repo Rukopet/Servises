@@ -1,4 +1,4 @@
-source_folders=("nginx" "mysql" "phpmyadmin" "wordpress")
+source_folders=("nginx" "mysql" "phpmyadmin" "wordpress" "metallb")
 # dir with image
 
 #build_name=("nginx_image")
@@ -9,9 +9,11 @@ len=${#source_folders[@]}
 docker_build()
 {
 #  echo "docker build -t "${source_folders[$1]}/${build_name[$1]}" ."
-
+if [ "${source_folders[$1]}" != metallb ]
+then
   echo "docker build -t ${source_folders[$1]}_image ${source_folders[$1]}/"
   docker build -t "${source_folders[$1]}"_image "${source_folders[$1]}"/
+fi
 }
 
 kubectl_apply()
@@ -22,7 +24,7 @@ kubectl_apply()
 
 re()
 {
-  kubectl delete deployments "${source_folders[$1]}-deploy"
+  kubectl delete deployments "${source_folders[$1]}-deployment"
 }
 
 main()
@@ -56,4 +58,15 @@ main()
   kubectl describe pods
 }
 
-main "$1" "$2"
+if [ "$1" == bd ]
+then
+  docker build -t "$2"_image "$2"
+elif [ "$1" == yl ]
+then
+  kubectl apply -f "$2/$2.yaml"
+elif [ "$1" == delpod ]
+then
+  kubectl delete deployments "$2-deployment"
+else 
+  main "$1" "$2"
+fi

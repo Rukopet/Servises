@@ -16,6 +16,4 @@ RUN		rm -f phpMyAdmin-5.0.4-all-languages.tar.gz
 
 COPY supervisord.conf /etc/supervisord.conf
 
-COPY	basic.sh /tmp_for_image/
-RUN		chmod +x /tmp_for_image/basic.sh
 CMD		["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
