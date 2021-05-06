@@ -1,4 +1,4 @@
-source_folders=("nginx" "mysql" "phpmyadmin" "wordpress" "metallb")
+source_folders=("nginx" "mysql" "phpmyadmin" "wordpress" "metallb" "ftps")
 # dir with image
 
 #build_name=("nginx_image")

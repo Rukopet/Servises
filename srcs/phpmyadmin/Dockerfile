@@ -12,7 +12,10 @@ RUN		wget https://files.phpmyadmin.net/phpMyAdmin/5.0.4/phpMyAdmin-5.0\
 RUN		tar -zxvf phpMyAdmin-5.0.4-all-languages.tar.gz
 RUN		mv phpMyAdmin-5.0.4-all-languages phpMyAdmin
 RUN		mkdir phpMyAdmin/tmp
+COPY	config.inc.php /phpMyAdmin
 RUN		rm -f phpMyAdmin-5.0.4-all-languages.tar.gz
+RUN		mkdir -p /run/nginx
+COPY	nginx.conf etc/nginx/conf.d/default.conf
 
 COPY supervisord.conf /etc/supervisord.conf
 
