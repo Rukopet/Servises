@@ -10,13 +10,13 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
-      name: "21"
+      name: "activ"
       port: 21
       targetPort: 21
     - protocol: TCP
-      name: "whole"
-      port: 50020
-      targetPort: 50020
+      name: "pass"
+      port: 21000
+      targetPort: 21000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -40,4 +40,4 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 21
-            - containerPort: 50020
+            - containerPort: 21000

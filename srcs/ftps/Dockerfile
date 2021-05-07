@@ -1,27 +1,51 @@
+# FROM alpine:3.12
+
+# EXPOSE 21 20 21000
+
+# # USER root
+
+# RUN apk update && apk upgrade
+# RUN apk add wget openssl pure-ftpd --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
+# # COPY vsftpd.conf /etc/vsftpd/
+
+# # add user
+# # RUN mkdir -p /etc/ftps/admin
+
+# RUN		yes "" | openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+# -keyout /etc/ssl/private/pure-ftpd.pem -out /etc/ssl/private/pure-ftpd.pem 
+
+# COPY    pure-ftpd.conf /etc/
+
+# # RUN     sed -i -e 's,^Daemonize .*,Daemonize no,' /etc/pure-ftpd.conf
+
+
+# COPY    basic.sh /
+# RUN		chmod +x basic.sh
+# CMD     ["/basic.sh"]
+
 FROM alpine:3.12
 
-EXPOSE 21 50020
-
+# update
 RUN apk update && apk upgrade
-RUN apk add wget openssl pure-ftpd --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
-# COPY vsftpd.conf /etc/vsftpd/
+
+# installs
+RUN apk add wget vsftpd openssl sudo
+
+# copies
+COPY vsftpd.conf /etc/vsftpd/
 
 # add user
 RUN mkdir -p /etc/ftps/admin
-# утснавливает пароль по умолчанию
-RUN adduser -DH admin && echo "admin:admin" | chpasswd
+RUN adduser -D admin && echo "admin:password" | chpasswd
 
-RUN		yes "" | openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
--keyout /etc/ssl/private/pure-ftpd.pem -out /etc/ssl/private/pure-ftpd.pem 
+# ssl
 
-RUN     apk add nginx
-RUN	mkdir -p /run/nginx
-# COPY	nginx etc/nginx/conf.d/default.conf
+RUN sudo mkdir -p /etc/ssl/private
+RUN openssl req -x509 -nodes -days 10 -subj "/C=RU/ST=Kazan/L=Kazan/O=21/OU=21School/CN=localhost" \
+    -newkey rsa:1024 -keyout /etc/ssl/private/pure-ftpd.pem -out /etc/ssl/private/pure-ftpd.pem
 
+# ports
+EXPOSE 21 21000
 
-RUN     sed -i -e 's,^Daemonize .*,Daemonize no,' /etc/pure-ftpd.conf
-
-
-COPY    basic.sh /
-RUN		chmod +x basic.sh
-CMD     ["/basic.sh"]
+# start
+CMD vsftpd /etc/vsftpd/vsftpd.conf

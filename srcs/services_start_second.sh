@@ -1,4 +1,4 @@
-source_folders=("nginx" "mysql" "phpmyadmin" "wordpress" "metallb" "ftps")
+source_folders=("nginx" "mysql" "phpmyadmin" "wordpress" "metallb" "ftps" "influxdb")
 # dir with image
 
 #build_name=("nginx_image")
@@ -63,6 +63,11 @@ then
   docker build -t "$2"_image "$2"
 elif [ "$1" == yl ]
 then
+  kubectl apply -f "$2/$2.yaml"
+elif [ "$1" == upd ]
+then
+  kubectl delete deployments "$2-deployment"
+  docker build -t "$2"_image "$2"
   kubectl apply -f "$2/$2.yaml"
 elif [ "$1" == delpod ]
 then
