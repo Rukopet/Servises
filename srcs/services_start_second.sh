@@ -1,4 +1,4 @@
-source_folders=("nginx" "mysql" "phpmyadmin" "wordpress" "metallb" "ftps" "influxdb")
+source_folders=("nginx" "mysql" "phpmyadmin" "wordpress" "metallb" "ftps" "influxdb" "grafana")
 # dir with image
 
 #build_name=("nginx_image")
@@ -54,10 +54,11 @@ main()
     docker_build "$i"
     kubectl_apply "$i"
   done
-  kubectl get pods
+  sleep 1
   kubectl describe pods
+  kubectl get pods
 }
-
+eval $(minikube docker-env)
 if [ "$1" == bd ]
 then
   docker build -t "$2"_image "$2"

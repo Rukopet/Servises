@@ -11,8 +11,9 @@ RUN		openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes\
     		-keyout /etc/ssl/private/servic.key -out /etc/ssl/certs/servic.crt \
     		-subj "/C=RU/ST=Tatarstan/L=Kazan/O=21school/OU=egums/CN=ft_server"
 
-COPY	devops.png /var/www/localhost
-COPY	index.html /var/www/localhost/index.html
+RUN		mkdir -p /www/mine
+COPY	devops.png /var/www/mine/
+COPY	index.html /var/www/mine/index.html
 
 COPY	basic.sh /tmp_for_image/
 RUN		chmod +x /tmp_for_image/basic.sh
