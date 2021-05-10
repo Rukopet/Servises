@@ -9,18 +9,24 @@
 	server {
 		listen 443			ssl;
 		listen [::]:443		ssl;
+		ssl on;
 		ssl_certificate		/etc/ssl/certs/servic.crt;
 		ssl_certificate_key	/etc/ssl/private/servic.key;
 
-		root				/var/www/localhost;
+		root				/var/www/mine;
 		index				index.html index.php index.htm;
 
-
-		    location ~ \/index.php {
-        return 301   http://$host/phpmyadmin/;
-    	}
+		location /index.php {
+        return 307 https://192.168.99.104/phpmyadmin/;
+   		}
 
 		location /wordpress {
 		return 307 http://192.168.99.104:5050/;
+		}
+
+		location /phpmyadmin/ {
+		proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Host $host;
+	    proxy_pass http://192.168.99.104:5000/;
 		}
 	}

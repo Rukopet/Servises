@@ -1,5 +1,6 @@
 minikube delete
-minikube start --vm-driver=virtualbox
+bash srcs/install.sh
+minikube start --vm-driver=virtualbox --cpus=4 --memory=4G --disk-size=50G
 minikube addons enable metrics-server
 minikube addons enable metallb
 eval $(minikube docker-env)
